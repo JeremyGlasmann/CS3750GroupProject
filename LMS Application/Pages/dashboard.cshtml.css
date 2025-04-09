@@ -1,0 +1,121 @@
+
+.main-container {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    gap: 20px;
+    min-height: 35rem;
+    width: 100%;
+    padding: 1rem;
+}
+
+.dash-card,
+.dash:visited,
+.dash:link
+{
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+.dash-card:hover {
+    color: #FFFFFF;
+    text-decoration: underline;
+}
+
+.card-container {
+    display: flex;
+    justify-content: center;
+    row-gap: 1rem; 
+    height: 100%;
+    width: 100%;
+    flex-wrap: wrap;
+    column-gap: 10px;
+}
+
+.course-card {
+    position: relative;
+    /*background-color: #212121;*/
+    height: 15rem;
+    width: 18rem;
+    margin: 1rem;
+    overflow: hidden;
+    border-radius: 1rem;
+}
+
+.course-card > div {
+    margin: 2rem 1rem; 
+}
+
+.course-card > div > * {
+    position: relative; 
+    z-index: 2; 
+}
+
+.todo-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 1rem;
+    color: black;
+}
+
+.notif {
+    background-color: #000000; 
+    color: #FFFFFF; 
+    padding: 20px;
+    border-radius: 10px; 
+    margin-bottom: 1rem; 
+}
+
+.toDoList {
+    margin-top: 10px; 
+}
+
+.h2Side {
+    margin: 5%; 
+    text-align: center; 
+    color: inherit; 
+}
+
+.dlRow {
+    margin: 5%; 
+}
+
+dd {
+    border-bottom: 5% solid #AFBC88;
+}
+
+.row::after {
+    content: ""; 
+    display: table; 
+    clear: both; 
+}
+
+@media (max-width: 768px) {
+    .main-container {
+        grid-template-columns: 1fr;
+    }
+
+    .todo-container, .notif {
+        margin-top: 1rem;
+    }
+}
+.clickable-task {
+    color: #007bff;
+    text-decoration: none;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 5px;
+    display: inline-block;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.clickable-task:hover {
+    color: white;
+    background-color: #007bff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.clickable-task:active {
+    transform: scale(0.98);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}

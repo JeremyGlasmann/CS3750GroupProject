@@ -1,0 +1,79 @@
+﻿@page
+@model RegisterPage.Pages.Dashboard
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+@if (Model.Role == "Teacher")
+{
+    <style>
+        .StudentView {
+            display: none;
+        }
+    </style>
+}
+else
+{
+    <style>
+        .TeacherView {
+            display: none;
+        }
+    </style>
+}
+
+<style>
+    .course-card{
+        box-shadow: 5px 5px #A7CEED;
+        border: 5px solid #d2e6f6;
+        background: white;
+        color: black;
+        cursor: pointer;
+    }
+</style>
+
+<div class="main-container">
+    <div class="parent1">
+        <div class="card-container">
+            @foreach (var c in Model.ClassList)
+            {
+                <div class="course-card"
+                     onclick="window.location.href='@Url.Page("./Course", new { id = c.Id })'">
+                    <div>
+                        <h1>@c.courseType @c.courseNumber</h1>
+                        <p>@c.courseName</p>
+                        <p>@c.startTime.ToString("hh:mm tt") - @c.endTime.ToString("hh:mm tt")</p>
+                        <p>@c.location</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    @if (Model.Role == "Student")
+    {
+        <div class="todo-container">
+            <div class="toDoList">
+                <h2 class="h2Side">To Do</h2>
+
+                @if (Model.ToDoList != null && Model.ToDoList.Any())
+                {
+                    <dl class="dlRow">
+                        @foreach (var task in Model.ToDoList)
+                        {
+                            <dt>
+                                <a href="@Url.Page("/Course", new { id = task.CourseID, assignid = task.Id })" class="clickable-task">
+                                    @task.Name
+                                </a>
+                            </dt>
+                            <dd class="col-sm-10"> <b>@task.ClassCode</b> @task.DueDate.ToString("MM/dd/yyyy")</dd>
+                        }
+                    </dl>
+                }
+                else
+                {
+                    <p>No tasks available.</p>
+                }
+            </div>
+        </div>
+    }
+</div>

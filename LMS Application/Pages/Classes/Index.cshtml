@@ -1,0 +1,88 @@
+﻿@page
+@model RegisterPage.Pages.Classes.IndexModel
+@{
+	ViewData["Title"] = "Index";
+}
+<!--Only Displays Teachers Nav-->
+<style>
+	.StudentView {
+		display: none;
+	}
+</style>
+
+<h1 class="text-center">Classes</h1>
+<div class="card">
+	<div class="table-responsive">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>
+						@Html.DisplayNameFor(model => model.classes[0].courseName)
+					</th>
+					<th>
+						@Html.DisplayNameFor(model => model.classes[0].courseType)
+					</th>
+					<th>
+						@Html.DisplayNameFor(model => model.classes[0].courseNumber)
+					</th>
+					<th>
+						@Html.DisplayNameFor(model => model.classes[0].creditHours)
+					</th>
+					<th>
+						@Html.DisplayNameFor(model => model.classes[0].location)
+					</th>
+					<th>
+						@Html.DisplayNameFor(model => model.classes[0].days)
+					</th>
+					<th>
+						@Html.DisplayNameFor(model => model.classes[0].courseSize)
+					</th>
+					<th></th>
+					<th></th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model.classes)
+				{
+					<tr>
+						<td>
+							@Html.DisplayFor(modelItem => item.courseName)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.courseType)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.courseNumber)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.creditHours)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.location)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.days)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.courseSize)
+						</td>
+						<td>
+							<a class="btn btn-outline-primary" asp-page="./Edit" asp-route-id="@item.Id">Edit</a>
+						</td>
+						<td>
+							<a class="btn btn-outline-primary" asp-page="./Details" asp-route-id="@item.Id">Details</a>
+						</td>
+						<td>
+							<a class="btn btn-danger" asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+
+		<p>
+			<a class="btn btn-outline-primary" asp-page="Create">Create New Class</a>
+		</p>
+	</div>
+</div>

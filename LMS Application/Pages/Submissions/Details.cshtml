@@ -1,0 +1,56 @@
+﻿@page
+@model RegisterPage.Pages.Submissions.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<!--Only Displays Teachers Nav-->
+<style>
+	.StudentView{display: none;}
+</style>
+
+
+<h1>Submission for @Model.assignment.title</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            Name
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.user.firstname)
+            @Html.DisplayFor(model => model.user.lastname)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Submission.grade)
+        </dt>
+        <dd class="col-sm-10">
+            @if (@Model.Submission.grade == null)
+            {
+                <p>-/100</p>
+            }
+            else
+            {
+                <p>@Html.DisplayFor(model => model.Submission.grade)/@Model.assignment.maxGrade</p>
+            }
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Submission.submitTime)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Submission.submitTime)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Submission.file)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Submission.file)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.Submission.ID">Grade</a> |
+    <a asp-page="./Index" asp-route-id="@Model.Submission.AssignmentID">Back to Submissions</a>
+</div>

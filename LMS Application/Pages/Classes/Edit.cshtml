@@ -1,0 +1,168 @@
+﻿@page
+@model RegisterPage.Pages.Classes.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+<!--Only Displays Teachers Nav-->
+<style>
+	.StudentView{display: none;}
+</style>
+
+<!--Styling for this page-->
+<style>
+    .card {
+        margin: 30px auto;
+        width: 80%;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+        .form-group label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+    .input-group {
+        margin-bottom: 1rem;
+    }
+
+    input.form-control, select.form-control {
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        padding: 10px;
+    }
+</style>
+
+<!--external style sheet-->
+<link rel="stylesheet" href="~/css/courseStyle.css" />
+
+
+<div class="card">
+    <h1 class="mb-5">Edit Class</h1>
+
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Classes.Id" />
+                <input type="hidden" asp-for="Classes.professorID" />
+                <div class="form-group">
+                    <label asp-for="Classes.courseName" class="control-label"></label>
+                    <input asp-for="Classes.courseName" class="form-control" />
+                    <span asp-validation-for="Classes.courseName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Classes.courseType" class="control-label"></label>
+                    <input asp-for="Classes.courseType" class="form-control" />
+                    <span asp-validation-for="Classes.courseType" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Classes.courseNumber" class="control-label"></label>
+                    <input asp-for="Classes.courseNumber" class="form-control" />
+                    <span asp-validation-for="Classes.courseNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Classes.crn" class="control-label"></label>
+                    <input asp-for="Classes.crn" class="form-control" />
+                    <span asp-validation-for="Classes.crn" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Classes.creditHours" class="control-label"></label>
+                    <input asp-for="Classes.creditHours" class="form-control" />
+                    <span asp-validation-for="Classes.creditHours" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Classes.location" class="control-label"></label>
+                    <input asp-for="Classes.location" class="form-control" />
+                    <span asp-validation-for="Classes.location" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Days</label>
+                    <div>
+                        <input type="checkbox" value="M" id="monday" onchange="updateDays()" />
+                        <label for="monday">Monday</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" value="T" id="tuesday" onchange="updateDays()" />
+                        <label for="tuesday">Tuesday</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" value="W" id="wednesday" onchange="updateDays()" />
+                        <label for="wednesday">Wednesday</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" value="R" id="thursday" onchange="updateDays()" />
+                        <label for="thursday">Thursday</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" value="F" id="friday" onchange="updateDays()" />
+                        <label for="friday">Friday</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" value="S" id="saturday" onchange="updateDays()" />
+                        <label for="saturday">Saturday</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" value="U" id="sunday" onchange="updateDays()" />
+                        <label for="sunday">Sunday</label>
+                    </div>
+                    <input type="hidden" id="days" name="Classes.days"/>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Classes.startTime" class="control-label"></label>
+                    <input asp-for="Classes.startTime" class="form-control" />
+                    <span asp-validation-for="Classes.startTime" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Classes.startDate" class="control-label"></label>
+                    <input asp-for="Classes.startDate" class="form-control" />
+                    <span asp-validation-for="Classes.startDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Classes.endTime" class="control-label"></label>
+                    <input asp-for="Classes.endTime" class="form-control" />
+                    <span asp-validation-for="Classes.endTime" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Classes.endDate" class="control-label"></label>
+                    <input asp-for="Classes.endDate" class="form-control" />
+                    <span asp-validation-for="Classes.endDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Classes.courseSize" class="control-label"></label>
+                    <input asp-for="Classes.courseSize" class="form-control" />
+                    <span asp-validation-for="Classes.courseSize" class="text-danger"></span>
+                </div>
+                <div class="form-group pt-2 pb-2">
+                    <input type="submit" value="Save" class="btn btn-custom btn-submit" />
+                    <a asp-page="./Index" class="btn btn-custom btn-edit">Return to Course</a>
+                </div>
+           
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        function updateDays() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"][onchange="updateDays()"]');
+            let selectedDays = "";
+
+            checkboxes.forEach((checkbox) => {
+                if (checkbox.checked) {
+                    selectedDays += checkbox.value;
+                }
+            });
+
+            document.getElementById("days").value = selectedDays;
+        }
+    </script>
+}

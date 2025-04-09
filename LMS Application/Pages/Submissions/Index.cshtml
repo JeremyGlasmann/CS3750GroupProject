@@ -1,0 +1,256 @@
+﻿@page "{action?}"
+@model RegisterPage.Pages.Submissions.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+    var currentAction = RouteData.Values["action"]?.ToString() ?? "Details";
+
+    // Initialize counters for each grade range
+    int gradeA = 0;
+    int gradeAminus = 0;
+    int gradeBplus = 0;
+    int gradeB = 0;
+    int gradeBminus = 0;
+    int gradeCplus = 0;
+    int gradeC = 0;
+    int gradeCminus = 0;
+    int gradeDplus = 0;
+    int gradeD = 0;
+    int gradeDminus = 0;
+    int gradeF = 0;
+
+    // Loop through submissions to categorize grades
+    if (Model.Submission != null)
+    {
+        foreach (var submission in Model.Submission)
+        {
+            // Calculate the percentage score
+            double percentage = submission.grade != null
+                ? ((double)submission.grade / Model.assignment.maxGrade) * 100
+                : 0;
+
+            if (percentage >= 94)
+            {
+                gradeA++;
+            }
+            else if (percentage >= 90)
+            {
+                gradeAminus++;
+            }
+            else if (percentage >= 87)
+            {
+                gradeBplus++;
+            }
+            else if (percentage >= 84)
+            {
+                gradeB++;
+            }
+            else if (percentage >= 80)
+            {
+                gradeBminus++;
+            }
+            else if (percentage >= 77)
+            {
+                gradeCplus++;
+            }
+            else if (percentage >= 74)
+            {
+                gradeC++;
+            }
+            else if (percentage >= 70)
+            {
+                gradeCminus++;
+            }
+            else if (percentage >= 67)
+            {
+                gradeDplus++;
+            }
+            else if (percentage >= 64)
+            {
+                gradeD++;
+            }
+            else if (percentage >= 60)
+            {
+                gradeDminus++;
+            }
+            else
+            {
+                gradeF++;
+            }
+        }
+    }
+}
+
+<!--Only Displays Teachers Nav-->
+<style>
+    .StudentView{display: none;}
+</style>
+
+<!--External Stylesheet-->
+<head>
+    <link rel="stylesheet" href="~/css/courseStyle.css" />
+</head>
+
+<!-- Breadcrumb Navigation -->
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-page="/dashboard">Home</a></li>
+        <li class="breadcrumb-item"><a asp-page="/Course" asp-route-id="@Model.assignment.classID">@Model.courseNum</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Submissions</li>
+    </ol>
+</nav>
+
+<!--Assignment title-->
+<div class="container">
+<h1>Submissions for @Model.assignment.title</h1>
+<hr />
+</div>
+
+<div class="card">
+    @if(Model.Submission != null && Model.Submission.Count > 0) {
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Submission[0].grade)
+                </th>
+                <th>
+                    Submitted
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Submission[0].file)
+                </th>
+                <th>
+                    Status
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model.Submission) {
+            <tr>
+                <td>
+                  @Html.DisplayFor(modelItem => item.User.firstname) @Html.DisplayFor(modelItem => item.User.lastname)
+                </td>
+                <td>
+                @if(item.grade == null) {
+                    <p>-/@Model.assignment.maxGrade</p>
+                }
+                else{
+                    <p>@Html.DisplayFor(modelItem => item.grade)/@Model.assignment.maxGrade</p>
+                }
+                </td>
+            
+                <td>
+                    @Html.DisplayFor(modelItem => item.submitTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.file)
+                </td>
+                <td>
+                    @if(item.grade == null){
+                        <p>Ungraded</p>
+                    }
+                    else{
+                        <p>Graded</p>
+                    }
+			    </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.ID" class="btn-custom btn-edit" style="text-decoration: none;">Grade</a> 
+                    <!--<a asp-page="./Details" asp-route-id="@item.ID">Submission</a>-->
+                    <!--<a asp-page="./Delete" asp-route-id="@item.ID">Del</a> -->
+                </td>
+            </tr>
+    }
+        </tbody>
+        </table>
+        <!-- Create a Chart using Google Charts-->
+        <div id="assignmentPerformanceChart" style="width: 100%; height: 500px;"></div>
+
+
+
+    <!-- Load the AJAX API -->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        // Load the Visualization API and the corechart package.
+        google.charts.load('current', { 'packages': ['corechart'] });
+
+        // Set a callback to run when the Google Visualization API is loaded.
+        google.charts.setOnLoadCallback(drawChart);
+
+        // Callback that creates and populates a data table,
+        // instantiates the pie chart, passes in the data, and
+        // draws it.
+        function drawChart() {
+            // Create the data table.
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Grade');
+            data.addColumn('number', 'Submissions');
+            data.addRows([
+                ['A (94-100)', @gradeA],
+                ['A- (90-94)', @gradeAminus],
+                ['B+ (87-90)', @gradeBplus],
+                ['B (84-87)', @gradeB],
+                ['B- (80-84)', @gradeBminus],
+                ['C+ (77-80)', @gradeCplus],
+                ['C (74-77)', @gradeC],
+                ['C- (70-74)', @gradeCminus],
+                ['D+ (67-70)', @gradeDplus],
+                ['D (64-67)', @gradeD],
+                ['D- (60-64)', @gradeDminus],
+                ['F (Below 60)', @gradeF]
+            ]);
+
+            // Set chart options
+            var options = {
+                colors: [
+                    '#388E3C', // A
+                    '#81C784', // A-
+                    '#FBC02D', // B+
+                    '#FFF176', // B
+                    '#EF6C00', // B-
+                    '#FFB74D', // C+
+                    '#C62828', // C
+                    '#EF5350', // C-
+                    '#1E88E5', // D+
+                    '#64B5F6', // D
+                    '#8E24AA', // D-
+                    '#8C8C8C'  // F
+                ],
+                is3D: true,
+                legend: {
+                    position: 'top',
+                    alignment: 'center',
+                    textStyle: { fontSize: 16, color: '#333' }
+                },
+                pieSliceText: 'value',
+                pieSliceTextStyle: { color: '#fff', fontSize: 12, bold: true },
+                animation: {
+                    startup: true,
+                    duration: 500,
+                    easing: 'out'
+                },
+                tooltip: {
+                    text: function (row, column) {
+                        var grade = data.getValue(row, 0).split(' ')[0]; // Get the letter grade
+                        var count = data.getValue(row, 1); // Get the number of submissions
+                        return "<b>" + grade + "</b>: " + count;
+                    }
+                }
+            };
+
+            // Instantiate and draw our chart, passing in some options.
+            var chart = new google.visualization.PieChart(document.getElementById('assignmentPerformanceChart'));
+            chart.draw(data, options);
+        }
+    </script>
+        <a asp-page="/Course" asp-route-id="@Model.assignment.classID" class="btn-custom btn-edit" style="text-decoration:none;">Return to Course</a>
+    }
+else
+{
+    <p>No Submissions Available</p>
+    <a asp-page="/Course" asp-route-id="@Model.assignment.classID" class="btn-custom btn-edit" style="text-decoration:none;">Return to Course</a>
+}

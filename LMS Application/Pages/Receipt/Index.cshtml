@@ -1,0 +1,59 @@
+@page
+@model RegisterPage.Pages_Receipt.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Receipts[0].UserId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Receipts[0].Username)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Receipts[0].TotalDue)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Receipts[0].TotalPaid)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Receipts[0].PaidDate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Receipts) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Username)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalDue)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalPaid)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PaidDate)
+            </td>
+            <td>
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

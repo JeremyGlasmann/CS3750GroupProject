@@ -1,0 +1,356 @@
+﻿@page "{action?}"
+@model RegisterPage.Pages.CourseModel
+
+@{
+    ViewData["Title"] = "Course";
+    var currentAction = RouteData.Values["action"]?.ToString() ?? "Details";
+    var roleCSS = Model.Role.ToLower();
+    var submitBox = "displaySubmit";
+}
+
+@if (@Model.assignID == 0)
+{
+    submitBox = "hideSubmit";
+}
+else
+{
+    submitBox = "";
+}
+
+@if (@Model.Role == "Teacher")
+{
+        <style>
+            .StudentView{display: none;}
+            .submitBtn{display: none;}
+        </style>
+}
+else
+{
+        <style>
+            .TeacherView{display: none;}
+            .submissionsBtn{display: none;}
+            .studentList{display: none;}
+
+
+
+        </style>
+}
+<head>
+    <link rel="stylesheet" href="~/css/courseStyle.css" />
+</head>
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-page="/dashboard">Home</a></li>       
+        <li class="breadcrumb-item active" aria-current="page">
+            @Model.currentClass.courseNumber
+        </li>
+    </ol>
+</nav>
+
+<!--Assignment title-->
+<div class="container">
+    <h1>@Model.currentClass.courseType @Model.currentClass.courseNumber - @Model.currentClass.courseName</h1>
+    <hr />
+</div>
+
+<div class="card">
+    <div>
+        @if (TempData["ConfirmationMessage"] != null)
+        {
+            <div class="success" style="background-color: #d4edda; border-radius: 8px; padding: 15px; margin: 20px 0; color: #155724; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                <h6>@Model.currentAssignment.title submitted successfully!</h6>
+            </div>
+        }
+    </div>
+    <div id="course-dashboard">
+        <!--titles for the UI-->
+        <div class="row">
+            @if(Model.Role == "Teacher") //change heading based on user
+            {
+                <h2 class="col-md-6">Students</h2>
+                <h2 class="col-md-6">Class Performance</h2>
+            } else
+            {
+                <h2 class="col-md-4">Your Grade</h2>
+                <h2 class="col-md-8">Class Performance</h2>
+            }
+        </div>
+        <div class="row">
+            @if (@Model.Role == "Teacher") //Teacher view
+            {
+                <div class="col-md-6 tableList">              
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Points</th>
+                                <th>Percentage</th>
+                                <th>Grade</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var student in Model.Students)
+                            {
+                                //variables for grade calculation
+                                var score = await Model.CalculateStudentScore(student.Id);
+                                var gradePercentage = Model.pointsPossible > 0 ? (score / (double)Model.pointsPossible) * 100 : 0;
+                                var letterGrade = GetLetterGrade(gradePercentage);
+                    
+                                <tr>
+                                    <td>@student.firstname @student.lastname</td>
+                                    <td>@score / @Model.pointsPossible</td>
+                                    <td><span>@gradePercentage.ToString("F2")%</span></td>
+                                    <td><span>@letterGrade</span></td>
+                                    <td></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else // Student view
+            {
+                //variables for grade calculation
+                var userId = HttpContext.Session.GetInt32("UserId") ?? default(int);
+                var totalPoints = await Model.CalculateStudentScore(userId);
+                var gradePercentage = Model.pointsPossible > 0 ? (totalPoints / (double)Model.pointsPossible) * 100 : 0;
+                var letterGrade = GetLetterGrade(gradePercentage);
+
+                <div class="col-md-4 tableList mb-5">             
+                    <table class="student-table">                  
+                            <tr>
+                                <th class="vertical-header">Points</th>
+                                <td>@totalPoints / @Model.pointsPossible</td>
+                            </tr>
+                            <tr>
+                                <th class="vertical-header">Percentage</th>
+                                <td><span>@gradePercentage.ToString("F2")%</span></td>
+                            </tr>
+                            <tr>
+                                <th class="vertical-header">Grade</th>
+                                <td><span>@letterGrade</span></td>
+                            </tr>
+                    </table>
+                </div>
+            }
+
+            <!--Div to display the performance chart change based on user-->
+            @if (Model.Role == "Teacher")
+            {
+                <div class="col-md-6">
+                    <div id="studentPerformanceChart"></div>
+                </div>
+            } else
+            {
+                <div class="col-md-8">
+                    <div id="studentPerformanceChart"></div>
+                </div>
+            }    
+        </div>
+    </div>
+
+        <!--Table for all assignments-->
+        <div class="row">
+            <div class="tableList">
+                <h2>Assignments</h2>
+                <p class="@roleCSS">
+                    <a asp-page="Assignments/Create" asp-route-id="@Model.currentClass.Id" class="create-assignment">Create New Assignment</a>
+                </p>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Due</th>
+                            <th>Type</th>
+                            <th>Points</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.assignments)
+                        {
+                            var userId = HttpContext.Session.GetInt32("UserId") ?? default(int);
+                            var grade = await Model.GetAssignmentGrade(userId, item.ID);
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.title)</td>
+                                <td>@item.dueDate.ToString("MM/dd/yy 'by' hh:mm tt")</td>
+                                <td>@Html.DisplayFor(modelItem => item.submissionType)</td>
+                                <td>
+                                    @if (@Model.Role == "Teacher")
+                                    {
+                                        <span>@item.maxGrade</span>
+                                    }
+                                    else if (grade.HasValue)
+                                    {
+                                        <span>@grade.Value / @item.maxGrade</span>
+                                    }
+                                    else
+                                    {
+                                        <span>- / @item.maxGrade</span>
+                                    }
+                                </td>
+                                <td>
+                                    <!-- Action Buttons -->
+                                    <div class="actions">
+                                        <span class="@roleCSS">
+                                            <a asp-page="Assignments/Edit" asp-route-classid="@Model.currentClass.Id" asp-route-assignmentid="@item.ID"><button class="btn-sm btn-custom btn-edit">Edit</button></a>
+                                        </span>                                  
+                                        <span class="submitBtn">
+                                            <form method="post">
+                                                <input type="hidden" asp-for="classID" />
+                                                <input type="hidden" asp-for="assignID" value="@item.ID" />
+                                                <button type="submit" class="btn-sm btn-custom btn-submit" id="view-assignment">Submit</button>
+                                            </form>
+                                        </span>
+                                        <span class="viewDetails">
+                                            <a asp-page="Assignments/Details" asp-route-id="@item.ID"><button class="btn-sm btn-custom btn-edit">Details</button></a>
+                                        </span>
+                                        <span class="@roleCSS">
+                                            <a asp-page="Assignments/Delete" asp-route-id="@item.ID"><button class="btn-sm btn-custom btn-delete">Delete</button></a>
+                                        </span>
+                                        <span class="submissionsBtn">
+                                            <a asp-page="Submissions/Index" asp-route-id="@item.ID">
+                                                <button class="btn-sm btn-custom btn-submit">Submissions</button>
+                                            </a>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+    
+            </div>  
+        </div>
+    
+
+        @if (Model.currentAssignment != null)
+        {
+            <div class="@submitBox" id="submissionForm">
+                <h3>Submission for @Model.currentAssignment.title</h3>
+                
+                <form method="post" enctype="@(Model.fileType == "File" ? "multipart/form-data" : "application/x-www-form-urlencoded")" asp-page-handler="@(Model.fileType == "File" ? "uploadFile" : "uploadText")">
+                    <input type="hidden" asp-for="classID" />
+                    <input type="hidden" asp-for="assignID" />
+                    @if (Model.fileType == "File")
+                    {
+                        <input name="file" type="file" accept=".txt, .pdf, .docx, image/*" required />
+                    }
+                    else
+                    {
+                        <textarea name="text" class="textSubmit" maxlength="300" required></textarea>
+                    }
+                <button type="submit" class="btn-sm btn-custom btn-submit" id="submitAssignment">Submit the Assignment</button>
+                </form>
+                
+            </div>
+        }
+    
+</div>
+
+@functions {
+        private string GetLetterGrade(double percentage)
+        {
+            if (percentage >= 94.0) return "A";
+            else if (percentage >= 90.0) return "A-";
+            else if (percentage >= 87.0) return "B+";
+            else if (percentage >= 84.0) return "B";
+            else if (percentage >= 80.0) return "B-";
+            else if (percentage >= 77.0) return "C+";
+            else if (percentage >= 74.0) return "C";
+            else if (percentage >= 70.0) return "C-";
+            else if (percentage >= 67.0) return "D+";
+            else if (percentage >= 64.0) return "D";
+            else if (percentage >= 60.0) return "D-";
+            else return "E";
+        }
+
+}
+
+    <!-- Create a Chart using Google Charts -->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', { packages: ['corechart'] });
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            // Define an array for grade counts
+            var gradeCounts = {
+                "A": 0, "A-": 0, "B+": 0, "B": 0, "B-": 0,
+                "C+": 0, "C": 0, "C-": 0, "D+": 0, "D": 0, "D-": 0, "E": 0
+            };
+
+            // Count each grade
+            @foreach (var student in Model.Students)
+        {
+            var score = await Model.CalculateStudentScore(student.Id);
+            var gradePercentage = Model.pointsPossible > 0 ? (score / (double)Model.pointsPossible) * 100 : 0;
+            var letterGrade = GetLetterGrade(gradePercentage);
+
+            // Increment the appropriate grade count
+            <text>gradeCounts['@letterGrade']++;</text>
+        }
+
+                        // Prepare data for the chart with counts in the labels
+                        var data = google.visualization.arrayToDataTable([
+                ['Letter Grade', 'Number of Students'],
+                ["A: " + gradeCounts["A"], gradeCounts["A"]],
+                ["A-: " + gradeCounts["A-"], gradeCounts["A-"]],
+                ["B+: " + gradeCounts["B+"], gradeCounts["B+"]],
+                ["B: " + gradeCounts["B"], gradeCounts["B"]],
+                ["B-: " + gradeCounts["B-"], gradeCounts["B-"]],
+                ["C+: " + gradeCounts["C+"], gradeCounts["C+"]],
+                ["C: " + gradeCounts["C"], gradeCounts["C"]],
+                ["C-: " + gradeCounts["C-"], gradeCounts["C-"]],
+                ["D+: " + gradeCounts["D+"], gradeCounts["D+"]],
+                ["D: " + gradeCounts["D"], gradeCounts["D"]],
+                ["D-: " + gradeCounts["D-"], gradeCounts["D-"]],
+                ["E: " + gradeCounts["E"], gradeCounts["E"]]
+            ]);
+
+            // Set chart options
+            var options = {
+                colors: [
+                    '#388E3C',
+                    '#81C784',
+                    '#FBC02D',
+                    '#FFF176',
+                    '#EF6C00',
+                    '#FFB74D',
+                    '#C62828',
+                    '#EF5350',
+                    '#1E88E5',
+                    '#64B5F6',
+                    '#8E24AA',
+                    '#8C8C8C',
+                ],
+                is3D: true,
+                legend: {
+                    position: 'top',
+                    alignment: 'center',
+                    textStyle: { fontSize: 16, color: '#333' }
+                },
+                pieSliceText: 'value',
+                pieSliceTextStyle: { color: '#fff', fontSize: 12, bold: true },
+                animation: {
+                    startup: true,
+                    duration: 500,
+                    easing: 'out'
+                },
+                tooltip: {
+                    text: function (row, column) {
+                        var grade = data.getValue(row, 0).split(':')[0];
+                        var count = data.getValue(row, 0).split(':')[1];
+                        return "<b>" + grade + "</b>: " + count;
+                    }
+                }
+            };
+
+            // Create and display the chart
+            var chart = new google.visualization.PieChart(document.getElementById('studentPerformanceChart'));
+            chart.draw(data, options);
+        }
+    </script>

@@ -1,0 +1,91 @@
+@page
+<!--Displays Profile Details -->
+@model Profile
+@{
+    ViewData["Title"] = "Profile";
+}
+@if (@Model.Role == "Teacher")
+{
+    <style>
+        .StudentView {
+            display: none;
+        }
+    </style>
+}
+else
+{
+    <style>
+        .TeacherView {
+            display: none;
+        }
+    </style>
+}
+
+<head>
+    <link rel="stylesheet" href="~/css/profileStyle.css" asp-append-version="true" />
+</head>
+
+<h1 class="text-center my-4">Profile Details</h1>
+<div class="container">
+    <div class="card">
+        <div class="row align-items-start">
+            <!-- Profile Image Section -->
+            <div class="col-md-4 col-12 text-center">
+                <h3>Personal Details</h3>
+                <div class="ProfileImage mb-4">
+                    <img src="@Url.Content("~/Resources/ProfileImages/" + Model.ProfileImageURL)" alt="Profile Image" class="img-fluid" />
+
+                    @if (Model.IsUpdateImageFormVisible)
+                    {
+                        <form class="UploadImage" enctype="multipart/form-data" method="post" asp-page-handler="UploadImage">
+                            <label class="custom-file-upload">
+                                <input type="file" name="ProfileImageFile" accept="image/*" class="form-control-file" />
+                                Choose Image
+                            </label>
+                            <button type="submit" class="btn uploadImageBtn">Save Changes</button>
+                            @if (!string.IsNullOrEmpty(Model.ImageUploadError))
+                            {
+                                <div class="alert alert-danger mt-3">@Model.ImageUploadError</div>
+                            }
+                        </form>
+                    }
+                    else
+                    {
+                        <form method="post" asp-page-handler="ToggleForm">
+                            <button type="submit" class="btn uploadImageBtn mt-4 mx-auto">Update Image</button>
+                        </form>
+                        @if (!string.IsNullOrEmpty(Model.ImageUploadError))
+                        {
+                            <div class="alert alert-success mt-3">@Model.ImageUploadError</div>
+                        }
+                    }
+                </div>
+            </div>
+
+            <!-- Profile Details Section -->
+            <div class="col-md-7 col-12 mt-2">
+                <dl class="row">
+                    <dt class="col-sm-4 mt-2">Name:</dt>
+                    <dd class="col-sm-8 mt-2">@Model.FirstName @Model.LastName</dd>
+                    <dt class="col-sm-4 mt-2">Birthdate:</dt>
+                    <dd class="col-sm-8 mt-2">@Model.Age.ToString("MM/dd/yyyy")</dd>
+                    <dt class="col-sm-4 mt-2">Phone Number:</dt>
+                    <dd class="col-sm-8 mt-2">@Model.PhoneNum</dd>
+                    <dt class="col-sm-4 mt-2">Email:</dt>
+                    <dd class="col-sm-8 mt-2">@Model.Username</dd>
+                </dl>
+
+                <h3 class="mt-5">Address</h3>
+                <dl class="row">
+                    <dt class="col-sm-4 mt-2">Current Address:</dt>
+                    <dd class="col-sm-8 mt-2"></dd>
+                    <dd class="col-sm-8">@Model.Street @Model.City, @Model.State @Model.ZipCode</dd>
+                </dl>
+                <div class="text-center my-4 mx-auto">
+                    <a asp-area="" asp-page="./Credentials/Edit" class="btn editProfileBtn mx-auto" asp-route-id="@Model.Id">Edit Profile</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

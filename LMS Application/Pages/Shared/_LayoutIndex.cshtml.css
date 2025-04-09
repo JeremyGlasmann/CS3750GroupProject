@@ -1,0 +1,23 @@
+/*Seperate Layout for the Sign in Page*/
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px;
+  }
+
+  main{
+    position: fixed;
+    inset: 0px;
+    width: fit-content;
+    height: fit-content;
+    max-width: 100vw;
+    max-height: 100dvh;
+    margin: auto;
+    background-color: white;
+    border: 5px solid #d2e6f6;
+    box-shadow: 5px 5px #A7CEED;
+    border-radius: 1rem;
+  }

@@ -1,0 +1,122 @@
+﻿@page "{action?}"
+@model RegisterPage.Pages.Assignments.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+    var currentAction = RouteData.Values["action"]?.ToString() ?? "Details";
+}
+
+<!--Only Displays Teachers Nav-->
+<style>
+	.StudentView{display: none;}
+</style>
+
+<!--Styling for this page-->
+<style>
+    .card {
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+        margin-top: 30px;
+    }
+
+    .card .row dt {
+        font-size: 1.6rem; 
+        font-weight: bold; 
+        color: #333;
+        padding-right: 15px;
+        text-align: left;
+    }
+
+    .card .row dd {
+        font-size: 1.5rem; 
+        padding-left: 15px; 
+        color: #555;
+        margin-bottom: 18px;
+    }
+
+    .card .row dd: last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+    }
+
+    .actions a {
+        text-decoration: none;
+    }
+    
+</style>
+
+<link rel="stylesheet" href="~/css/courseStyle.css" />
+
+
+<!-- Breadcrumb Navigation -->
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-page="/dashboard">Home</a></li>
+        <li class="breadcrumb-item">
+            <a asp-page="/Course" asp-route-id="@Model.Assignments.classID">
+                @Html.DisplayFor(model => model.Assignments.courseNum)
+            </a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+            @currentAction
+        </li>
+    </ol>
+</nav>
+
+<!--Assignment Title-->
+<h1>@Html.DisplayFor(model => model.Assignments.title) Details</h1>
+
+<!--Assingment Details-->
+<div class="card my-5">
+    <dl class="row">
+        <dt class="col-sm-2">
+            Name
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Assignments.title)
+        </dd>
+        <dt class="col-sm-2">
+            Course #
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Assignments.courseNum)
+        </dd>
+        <dt class="col-sm-2">
+            Description
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Assignments.description)
+        </dd>
+        <dt class="col-sm-2">
+            Due
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Assignments.dueDate)
+        </dd>
+        <dt class="col-sm-2">
+            Max Grade
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Assignments.maxGrade)
+        </dd>
+        <dt class="col-sm-2">
+            Class
+        </dt>
+        <dd class="col-sm-10">
+            @Model.CourseName
+        </dd>
+    </dl>
+
+    <div class="actions">
+        @if (Model.Role == "Teacher")
+        {
+            <a asp-page="./Edit" asp-route-classid="@Model.Assignments.classID" asp-route-assignmentid="@Model.Assignments.ID" class="btn-custom btn-edit">Edit</a>
+        }       
+        <a asp-page="/Course" asp-route-id="@Model.Assignments.classID" class="btn-custom btn-submit">Return to Course</a>
+    </div>
+</div>
+
+
+

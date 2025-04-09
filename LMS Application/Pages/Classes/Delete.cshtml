@@ -1,0 +1,162 @@
+﻿@page
+@model RegisterPage.Pages.Classes.DeleteModel
+
+@{
+    ViewData["Title"] = "Delete";
+}
+<!--Only Displays Teachers Nav-->
+<style>
+	.StudentView{display: none;}
+</style>
+
+<!--Styling for this page-->
+<style>
+    .card {
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+        margin-top: 30px;
+    }
+
+        .card .row dt {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #333;
+            padding-right: 15px;
+            text-align: left;
+        }
+
+        .card .row dd {
+            font-size: 1.5rem;
+            padding-left: 15px;
+            color: #555;
+            margin-bottom: 18px;
+        }
+
+            .card .row dd: last-child {
+                border-bottom: none;
+                margin-bottom: 0;
+            }
+
+    .actions a {
+        text-decoration: none;
+    }
+
+    /* Style for h3 headings */
+    h3 {
+        font-size: 1.6rem;
+        font-weight: bold;
+        color: #555;
+        margin: 20px 0;
+    }
+
+
+
+        h3.text-danger {
+            font-size: 1.75rem; /* Increase the font size slightly to make it more prominent */
+            font-weight: 600; /* Make it slightly bolder for emphasis */
+            color: #e74c3c; /* A vibrant red color for danger/warning */
+            margin: 20px 0; /* Add margin for spacing */
+            text-align: center;
+        }
+
+    .card h3 {
+        font-size: 1.75rem;
+        font-weight: bold;
+    }
+
+</style>
+
+<link rel="stylesheet" href="~/css/courseStyle.css" />
+
+<div class="card my-5">
+    <h1>
+        Class - @Html.DisplayFor(model => model.Classes.courseName)
+
+   </h1>
+
+    <h3 class="text-danger">Are you sure you want to delete this class?</h3>
+    <div>
+    <dl class="row">
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Classes.courseName)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Classes.courseName)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Classes.courseType)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Classes.courseType)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Classes.courseNumber)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Classes.courseNumber)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Classes.crn)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Classes.crn)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Classes.creditHours)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Classes.creditHours)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Classes.location)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Classes.location)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Classes.days)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Classes.days)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Classes.startTime)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Classes.startTime)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Classes.startDate)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Classes.startDate)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Classes.endTime)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Classes.endTime)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Classes.endDate)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Classes.endDate)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Classes.courseSize)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Classes.courseSize)
+        </dd>
+    </dl>
+    
+    <form method="post">
+        <input type="hidden" asp-for="Classes.Id" />
+        <input type="submit" value="Confirm Deletion" class="btn btn-custom btn-delete" /> 
+        <a asp-page="./Index" class="btn btn-custom btn-edit">Return to Course</a>
+    </form>
+</div>
+</div>

@@ -1,0 +1,142 @@
+﻿@page
+@model RegisterPage.Pages.Classes.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+<!--Only Displays Teachers Nav-->
+<style>
+	.StudentView{display: none;}
+</style>
+
+<!--Styling for this page-->
+<style>
+    .card {
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+        margin-top: 30px;
+    }
+
+        .card .row dt {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #333;
+            padding-right: 15px;
+            text-align: left;
+        }
+
+        .card .row dd {
+            font-size: 1.5rem;
+            padding-left: 15px;
+            color: #555;
+            margin-bottom: 18px;
+        }
+
+            .card .row dd: last-child {
+                border-bottom: none;
+                margin-bottom: 0;
+            }
+
+    .actions a {
+        text-decoration: none;
+    }
+
+    /* Style for h3 headings */
+    h3 {
+        font-size: 1.6rem;
+        font-weight: bold;
+        color: #555;
+        margin: 20px 0;
+    }
+</style>
+
+<!--external style sheet-->
+<link rel="stylesheet" href="~/css/courseStyle.css" />
+
+<div class="card">
+<h1 class="mb-5">Class Details</h1>
+
+<div class="col-md-8 offset-md-2">
+    <dl class="row">
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Classes.courseName)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Classes.courseName)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Classes.courseType)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Classes.courseType)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Classes.courseNumber)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Classes.courseNumber)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Classes.crn)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Classes.crn)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Classes.creditHours)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Classes.creditHours)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Classes.location)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Classes.location)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Classes.days)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Classes.days)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Classes.startTime)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Classes.startTime)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Classes.startDate)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Classes.startDate)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Classes.endTime)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Classes.endTime)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Classes.endDate)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Classes.endDate)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Classes.courseSize)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Classes.courseSize)
+        </dd>
+    </dl>
+    <div>
+        <a asp-page="./Edit" asp-route-id="@Model.Classes.Id" class="btn btn-custom btn-submit">Edit</a>
+        <a asp-page="./Index" class="btn btn-custom btn-edit">Return to Course</a>
+    </div>
+</div>
+</div>
+

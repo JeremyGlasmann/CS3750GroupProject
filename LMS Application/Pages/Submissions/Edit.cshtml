@@ -1,0 +1,140 @@
+﻿@page "{action?}"
+@model RegisterPage.Pages.Submissions.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+    var currentAction = RouteData.Values["action"]?.ToString() ?? "Assignment Details";
+
+}
+
+<!--Only Displays Teachers Nav-->
+<style>
+    .StudentView{display: none;}
+</style>
+
+<style>
+    .StudentView {
+        display: none;
+    }
+</style>
+
+<!--Styling for this page-->
+<style>
+    .card {
+        margin: 30px auto;
+        width: 80%;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+        .form-group label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+    .input-group {
+        margin-bottom: 1rem;
+    }
+
+    input.form-control, select.form-control {
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        padding: 10px;
+    }
+</style>
+
+<!--external style sheet-->
+<link rel="stylesheet" href="~/css/courseStyle.css" />
+
+<!-- Breadcrumb Navigation -->
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-page="/dashboard">Home</a></li>
+        <li class="breadcrumb-item">
+            <a asp-page="/Course" asp-route-id="@Model.assignment.classID">
+                @Model.assignment.courseNum
+            </a>
+        </li>
+        <li class="breadcrumb-item">
+            <a asp-page="./Index" asp-route-id="@Model.Submission.AssignmentID">
+                @Model.assignment.title Submissions
+            </a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+            Grade Submission
+        </li>
+    </ol>
+</nav>
+
+<div class="card">
+    <h1 class="my-2 mb-4">Grade for @Model.assignment.title</h1>
+
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Submission.ID" />
+                <input type="hidden" asp-for="Submission.UserID" />
+                <input type="hidden" asp-for="Submission.AssignmentID" />
+                <input type="hidden" asp-for="Submission.User" />
+                <input type="hidden" asp-for="Submission.Assignment" />
+                <input type="hidden" asp-for="Submission.submitTime" />
+                <input type="hidden" asp-for="Submission.file" />
+                <div class="form-group">
+                    <label for="user-name" class="control-label">Submission For</label>
+                    <p id="user-name" class="form-text" style="font-size: 24px;">
+                        @Model.user.firstname @Model.user.lastname
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Submission.grade" class="control-label"></label>
+                    <div class="input-group">
+                        <input asp-for="Submission.grade" class="form-control" />
+                        <span class="input-group-text">out of @Model.assignment.maxGrade</span>
+                    </div>
+                    <span asp-validation-for="Submission.grade" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Submission.submitTime" class="control-label"></label>
+                    <input readonly asp-for="Submission.submitTime" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                    <a asp-page="./Index" asp-route-id="@Model.Submission.AssignmentID">
+                        <button type="submit" class="btn btn-custom btn-submit">
+                            Update Grade
+                        </button>
+                    </a>
+                </div>
+            </form>
+
+            @if (@Model.Submission.file.EndsWith(".txt"))
+            {
+                <h2 class="mt-3 text-center">Text Submission</h2>
+
+                <form>
+                    <textarea id="filecontent" rows="10" cols="50" readonly>@Model.FileContent</textarea>
+                </form>
+            }
+            else
+            {
+                <h2 class="mt-3 text-center">Download File Submission</h2>
+
+                <a asp-page-handler="DownloadFile" asp-route-id="@Model.Submission.ID">@Model.Submission.file</a>
+            }
+
+        </div>
+    </div>
+    <div class="d-flex justify-content-center my-5">
+        <a class="btn btn-custom btn-edit" asp-page="./Index" asp-route-id="@Model.Submission.AssignmentID">Back to Submissions</a>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

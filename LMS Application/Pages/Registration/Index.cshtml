@@ -1,0 +1,140 @@
+﻿@page
+@model RegisterPage.Pages.Registration.IndexModel
+@{
+    ViewData["Title"] = "Registration";
+}
+<!--Only Displays Student's Nav' Nav-->
+<style>
+	.TeacherView{display: none;}
+</style>
+
+<head>
+    <link rel="stylesheet" href="~/css/registrationStyle.css" />
+</head>
+
+<h1>Registration</h1><br />
+<!-- Filter Classes on the page-->
+<div class="container mt-1 mb-3">
+    <div class="row">
+        <!-- Search bar and dropdown -->
+        <div class="col-md-6">
+            <form asp-page-handler="filterClasses" method="post">
+                <div class="input-group">
+                    <!-- Search input -->
+                    <input type="text" class="form-control" name="searchQuery" placeholder="Search..." style="flex: 2;" />
+
+                    <!-- Dropdown -->
+                    <select class="form-select" name="courseType" style="flex: 1;">
+                        <option value="" selected>Select Course</option>
+                        <option value="CS">CS</option>
+                        <option value="ECE">ECE</option>
+                        <option value="ENGL">ENGL</option>
+                        <option value="MATH">MATH</option>
+                        <option value="MUSIC">MUSIC</option>
+                    </select>
+
+                    <!-- Filter button -->
+                    <button class="btn btn-secondary ml-2" type="submit"><i class="bi-funnel"></i></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<h2>Current Schedule</h2>
+
+<!-- Assigned Classes Table -->
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.RegisteredClasses[0].courseName)</th>
+            <th>@Html.DisplayNameFor(model => model.RegisteredClasses[0].courseType)</th>
+            <th>@Html.DisplayNameFor(model => model.RegisteredClasses[0].courseNumber)</th>
+            <th>@Html.DisplayNameFor(model => model.RegisteredClasses[0].crn)</th>
+            <th>@Html.DisplayNameFor(model => model.RegisteredClasses[0].creditHours)</th>
+            <th>@Html.DisplayNameFor(model => model.RegisteredClasses[0].location)</th>
+            <th>@Html.DisplayNameFor(model => model.RegisteredClasses[0].days)</th>
+            <th>@Html.DisplayNameFor(model => model.RegisteredClasses[0].startTime)</th>
+            <th>@Html.DisplayNameFor(model => model.RegisteredClasses[0].startDate)</th>
+            <th>@Html.DisplayNameFor(model => model.RegisteredClasses[0].endTime)</th>
+            <th>@Html.DisplayNameFor(model => model.RegisteredClasses[0].endDate)</th>
+            <th>@Html.DisplayNameFor(model => model.RegisteredClasses[0].courseSize)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.RegisteredClasses)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.courseName)</td>
+                <td>@Html.DisplayFor(modelItem => item.courseType)</td>
+                <td>@Html.DisplayFor(modelItem => item.courseNumber)</td>
+                <td>@Html.DisplayFor(modelItem => item.crn)</td>
+                <td>@Html.DisplayFor(modelItem => item.creditHours)</td>
+                <td>@Html.DisplayFor(modelItem => item.location)</td>
+                <td>@Html.DisplayFor(modelItem => item.days)</td>
+                <td>@Html.DisplayFor(modelItem => item.startTime)</td>
+                <td>@Html.DisplayFor(modelItem => item.startDate)</td>
+                <td>@Html.DisplayFor(modelItem => item.endTime)</td>
+                <td>@Html.DisplayFor(modelItem => item.endDate)</td>
+                <td>@Html.DisplayFor(modelItem => item.courseSize)</td>
+                <td>
+                    <form asp-page-handler="dropClass" method="post">
+                        <input type="hidden" name="id" value="@item.Id"></input>
+                        <button type="submit">Drop Class</button>
+                    </form>
+                    <a asp-page="./Details" asp-route-id="@item.Id">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- New Table for Available Classes -->
+<br /><h2>Available Classes</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.AvailableClasses[0].courseName)</th>
+            <th>@Html.DisplayNameFor(model => model.AvailableClasses[0].courseType)</th>
+            <th>@Html.DisplayNameFor(model => model.AvailableClasses[0].courseNumber)</th>
+            <th>@Html.DisplayNameFor(model => model.AvailableClasses[0].crn)</th>
+            <th>@Html.DisplayNameFor(model => model.AvailableClasses[0].creditHours)</th>
+            <th>@Html.DisplayNameFor(model => model.AvailableClasses[0].location)</th>
+            <th>@Html.DisplayNameFor(model => model.AvailableClasses[0].days)</th>
+            <th>@Html.DisplayNameFor(model => model.AvailableClasses[0].startTime)</th>
+            <th>@Html.DisplayNameFor(model => model.AvailableClasses[0].startDate)</th>
+            <th>@Html.DisplayNameFor(model => model.AvailableClasses[0].endTime)</th>
+            <th>@Html.DisplayNameFor(model => model.AvailableClasses[0].endDate)</th>
+            <th>@Html.DisplayNameFor(model => model.AvailableClasses[0].courseSize)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.AvailableClasses)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.courseName)</td>
+                <td>@Html.DisplayFor(modelItem => item.courseType)</td>
+                <td>@Html.DisplayFor(modelItem => item.courseNumber)</td>
+                <td>@Html.DisplayFor(modelItem => item.crn)</td>
+                <td>@Html.DisplayFor(modelItem => item.creditHours)</td>
+                <td>@Html.DisplayFor(modelItem => item.location)</td>
+                <td>@Html.DisplayFor(modelItem => item.days)</td>
+                <td>@Html.DisplayFor(modelItem => item.startTime)</td>
+                <td>@Html.DisplayFor(modelItem => item.startDate)</td>
+                <td>@Html.DisplayFor(modelItem => item.endTime)</td>
+                <td>@Html.DisplayFor(modelItem => item.endDate)</td>
+                <td>@Html.DisplayFor(modelItem => item.courseSize)</td>
+                <td>
+                    <form class="Submit" asp-page-handler="addClass" method="post">
+                        <input type="hidden" name="id" value="@item.Id"></input>
+                        <button type="submit">Add Class</button>
+                     </form>
+
+                    <a asp-page="./Details" asp-route-id="@item.Id">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

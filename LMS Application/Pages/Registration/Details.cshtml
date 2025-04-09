@@ -1,0 +1,93 @@
+﻿@page
+@model RegisterPage.Pages.Registration.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+<!--Only Displays Teachers Nav-->
+<style>
+	.StudentView{display: none;}
+</style>
+
+<h1>Class Details</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Classes.courseName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Classes.courseName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Classes.courseType)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Classes.courseType)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Classes.courseNumber)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Classes.courseNumber)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Classes.crn)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Classes.crn)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Classes.creditHours)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Classes.creditHours)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Classes.location)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Classes.location)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Classes.days)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Classes.days)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Classes.startTime)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Classes.startTime)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Classes.startDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Classes.startDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Classes.endTime)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Classes.endTime)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Classes.endDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Classes.endDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Classes.courseSize)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Classes.courseSize)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Index">Back to Registration Page</a>
+</div>
